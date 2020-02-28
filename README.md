@@ -11,8 +11,6 @@ To make it possible, the following setting were made.
 
 > We set up a service that load the configurations on MongoDB and transform that in dynamic routes compatible with Apache Camel.  
 
-<img src="routes.png"/>
-
 ```java
 @Slf4j
 @Service
@@ -38,6 +36,8 @@ public class RouteConfigurationService {
 
 }
 ```
+
+<img src="routes.png"/>
 
 > CamelContextConfiguration - After that I need to implements this class to receive Callback that allows custom logic during starting up
 
