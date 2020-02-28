@@ -1,0 +1,14 @@
+[
+  {
+    "route" : "<route id=\"step01\">\n        <from uri=\"direct:httpMultcastAsync\" />\n        <multicast stopOnException=\"true\"\n                   stopOnAggregateException=\"true\"\n                   parallelProcessing=\"false\"\n                   strategyRef=\"httpMultiCastAggregationStrategy\"\n                   strategyMethodName=\"aggregate\">\n            <to uri=\"direct:elegibility\"/>\n            <to uri=\"direct:quotation\"/>\n            <to uri=\"direct:triage\"/>\n        </multicast>\n    </route>"
+  },
+  {
+    "route" : "<route id=\"step02\">\n        <from uri=\"direct:elegibility\"/>\n        <to uri=\"http4://www.mocky.io/v2/5e5027ed3000005100226e49\" />\n    </route>"
+  },
+  {
+    "route" : "<route id=\"step03\">\n        <from uri=\"direct:quotation\"/>\n        <to uri=\"http4://www.mocky.io/v2/5e5028643000009000226e4e\" />\n    </route>"
+  },
+  {
+    "route" : "<route id=\"step04\">\n        <from uri=\"direct:triage\"/>\n        <to uri=\"http4://www.mocky.io/v2/5e50287e3000009000226e4f\" />\n    </route>"
+  }
+]

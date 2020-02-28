@@ -1,0 +1,31 @@
+<routes xmlns="http://camel.apache.org/schema/spring">
+
+    <route id="step01">
+        <from uri="direct:httpMultcastAsync" />
+        <multicast stopOnException="true"
+                   stopOnAggregateException="true"
+                   parallelProcessing="false"
+                   strategyRef="httpMultiCastAggregationStrategy"
+                   strategyMethodName="aggregate">
+            <to uri="direct:elegibility"/>
+            <to uri="direct:quotation"/>
+            <to uri="direct:triage"/>
+        </multicast>
+    </route>
+
+    <route id="step02">
+        <from uri="direct:elegibility"/>
+        <to uri="http4://www.mocky.io/v2/5e5027ed3000005100226e49" />
+    </route>
+
+    <route id="step03">
+        <from uri="direct:quotation"/>
+        <to uri="http4://www.mocky.io/v2/5e5028643000009000226e4e" />
+    </route>
+
+    <route id="step04">
+        <from uri="direct:triage"/>
+        <to uri="http4://www.mocky.io/v2/5e50287e3000009000226e4f" />
+    </route>
+
+</routes>
