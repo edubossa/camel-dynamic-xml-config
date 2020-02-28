@@ -26,6 +26,13 @@ camel:
   springboot:
     name: SampleCamel
 management:
+  endpoints:
+    web:
+      exposure:
+        include: hawtio,jolokia
   endpoint:
     health:
       enabled: true
+
+hawtio:
+  authenticationEnabled: false
