@@ -2,8 +2,9 @@ package com.ews.camel.service;
 
 import com.ews.camel.model.Route;
 import com.ews.camel.repository.RouteConfigurationRepository;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
@@ -14,13 +15,16 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-@AllArgsConstructor
 public class RouteConfigurationService {
 
+    @Autowired
     private RouteConfigurationRepository repository;
 
+    @Value("${spring.application.name}")
+    private String applicationName;
+
     public InputStream routes() {
-        final List<Route> routes = this.repository.findAll();
+        final List<Route> routes = this.repository.findAllByApplicationName(this.applicationName);
 
         StringBuilder sb = new StringBuilder();
         sb.append("<routes xmlns=\"http://camel.apache.org/schema/spring\">");

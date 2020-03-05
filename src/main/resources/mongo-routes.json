@@ -14,5 +14,13 @@
   {
     "applicationName" : "onClickQuotation",
     "route" : "<route id=\"process03\">\n            <from uri=\"direct:triage\"/>\n            <to uri=\"http://www.mocky.io/v2/5e50287e3000009000226e4f\" />\n        </route>"
+  },
+  {
+    "applicationName" : "onClickEffective",
+    "route" : ""
+  },
+  {
+    "applicationName" : "onClickEffective",
+    "route" : ""
   }
 ]
