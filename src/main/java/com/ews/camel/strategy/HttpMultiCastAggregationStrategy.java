@@ -3,8 +3,8 @@ package com.ews.camel.strategy;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.apache.camel.AggregationStrategy;
 import org.apache.camel.Exchange;
-import org.apache.camel.processor.aggregate.AggregationStrategy;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -38,7 +38,7 @@ public class HttpMultiCastAggregationStrategy implements AggregationStrategy {
             merge.putPOJO("request02", node2);
             System.out.println(merge.toString());
 
-            e1.getIn().setBody(merge, JsonNode.class);
+            e1.getIn().setBody(merge.toString(), JsonNode.class);
             return e1;
         }
 

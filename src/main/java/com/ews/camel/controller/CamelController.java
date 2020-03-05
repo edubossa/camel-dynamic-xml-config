@@ -1,10 +1,11 @@
 package com.ews.camel.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
-import org.apache.camel.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,13 +23,12 @@ public class CamelController {
     @Autowired
     private ProducerTemplate producerTemplate;
 
+    @SneakyThrows(JsonProcessingException.class)
     @PostMapping(value = "/route")
-    JsonNode route(@RequestBody JsonNode body) {
-
-
-        JsonNode json = (JsonNode) producerTemplate.requestBody("direct:httpMultcastAsync", body.asText());
-        log.info("Response called Http Multicast : " + json.toString());
-        return json;
+    JsonNode route(@RequestBody JsonNode body)  {
+        String json = (String) producerTemplate.requestBody("direct:httpMultcastAsync", body.asText());
+        log.info("Response called Http Multicast : " +json);
+        return new ObjectMapper().readTree(json);
     }
 
 }

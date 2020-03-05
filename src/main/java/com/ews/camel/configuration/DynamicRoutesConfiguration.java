@@ -4,6 +4,8 @@ import com.ews.camel.service.RouteConfigurationService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.CamelContext;
+import org.apache.camel.ExtendedCamelContext;
+import org.apache.camel.model.ModelCamelContext;
 import org.apache.camel.model.RoutesDefinition;
 import org.apache.camel.spring.boot.CamelContextConfiguration;
 import org.springframework.stereotype.Component;
@@ -24,8 +26,14 @@ public class DynamicRoutesConfiguration implements CamelContextConfiguration {
     public void afterApplicationStart(CamelContext camelContext) {
         log.info("DynamicRoutesConfiguration.afterApplicationStart");
         try {
-            RoutesDefinition routes = camelContext.loadRoutesDefinition(this.routeConfigurationService.routes());
-            camelContext.addRouteDefinitions(routes.getRoutes());
+            ExtendedCamelContext ecc = camelContext.adapt(ExtendedCamelContext.class);
+            RoutesDefinition routeDefinition = (RoutesDefinition) ecc
+                            .getXMLRoutesDefinitionLoader()
+                            .loadRoutesDefinition(ecc, this.routeConfigurationService.routes());
+
+            ModelCamelContext adapt = camelContext.adapt(ModelCamelContext.class);
+            adapt.addRouteDefinitions(routeDefinition.getRoutes());
+
         } catch (Exception e) {
             e.printStackTrace();
         }
