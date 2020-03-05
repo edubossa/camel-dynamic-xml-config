@@ -11,20 +11,30 @@
 # turn on actuator health check
 
 # to configure logging levels
-#logging.level.org.springframework = INFO
-#logging.level.org.apache.camel.spring.boot = INFO
-#logging.level.org.apache.camel.impl = DEBUG
-#logging.level.sample.camel = DEBUG
-
+logging:
+  level:
+    io:
+      hawt: INFO
+    hdi:
+      route: DEBUG
+    org:
+      apache:
+        camel:
+          impl: DEBUG
+          spring:
+            boot: INFO
+      springframework: INFO
 
 spring:
+  jmx:
+    enabled: true
   data:
     mongodb:
       uri: mongodb+srv://edubossa:ews-2013@mflix-oq5qu.mongodb.net/marketPlaceDB?retryWrites=true&w=majority
       database: marketPlaceDB
 camel:
   springboot:
-    name: SampleCamel
+    name: HdiRoute
 management:
   endpoints:
     web:
@@ -34,5 +44,6 @@ management:
     health:
       enabled: true
 
-hawtio:
-  authenticationEnabled: false
+#hawtio:
+#  authenticationEnabled: false
+

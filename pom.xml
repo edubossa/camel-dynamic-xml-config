@@ -25,10 +25,16 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-tomcat</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-actuator</artifactId>
+			<artifactId>spring-boot-starter-undertow</artifactId>
 		</dependency>
 
 		<!-- Camel -->
@@ -58,6 +64,22 @@
 			<groupId>io.hawt</groupId>
 			<artifactId>hawtio-springboot</artifactId>
 			<version>2.9.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-jaas</artifactId>
+			<version>9.4.11.v20180605</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-http</artifactId>
+			<version>9.4.11.v20180605</version>
 		</dependency>
 
 
