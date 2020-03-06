@@ -1,0 +1,76 @@
+<routes xmlns="http://camel.apache.org/schema/spring">
+
+    <route id="callHttp">
+        <from uri="direct:httpMultcastAsync" />
+        <multicast stopOnException="true"
+                   stopOnAggregateException="true"
+                   parallelProcessing="false"
+                   strategyRef="httpMultiCastAggregationStrategy"
+                   strategyMethodName="aggregate">
+            <to uri="direct:elegibility"/>
+            <to uri="direct:quotation"/>
+            <to uri="direct:triage"/>
+        </multicast>
+        <setHeader name="CamelJsltString">
+            <constant>
+                {
+                "id" : .request01.request01.enrichedId,
+                "process" : .request01.request01.enrichedProcess
+                }
+            </constant>
+        </setHeader>
+        <to uri="jslt:callHttp" />
+    </route>
+
+    <route id="process01">
+        <from uri="direct:elegibility"/>
+        <setHeader name="CamelHttpMethod">
+            <constant>GET</constant>
+        </setHeader>
+        <to uri="http://www.mocky.io/v2/5e62bd803600007100e8dc20?bridgeEndpoint=true&amp;throwExceptionOnFailure=false" />
+        <choice>
+            <when>
+                <!-- quando o codigo http for menor que 300 -->
+                <simple>${header.CamelHttpResponseCode} &lt; 300</simple>
+                <setHeader name="CamelHttpMethod">
+                    <constant>GET</constant>
+                </setHeader>
+                <to uri="http://www.mocky.io/v2/5e50287e3000009000226e4f?bridgeEndpoint=true"/>
+            </when>
+            <otherwise>
+                <log message="nao foi possivel obter response: ${body} \n redirecionando para outra API..."/>
+                <setHeader name="CamelHttpMethod">
+                    <constant>GET</constant>
+                </setHeader>
+                <to uri="http://www.mocky.io/v2/5e5027ed3000005100226e49?bridgeEndpoint=true"/>
+            </otherwise>
+        </choice>
+
+        <setHeader name="CamelJsltString">
+            <constant>
+                {
+                "enrichedId" : .id,
+                "enrichedProcess" : .process
+                }
+            </constant>
+        </setHeader>
+        <to uri="jslt:process01" />
+    </route>
+
+    <route id="process02">
+        <from uri="direct:quotation"/>
+        <setHeader name="CamelHttpMethod">
+            <constant>GET</constant>
+        </setHeader>
+        <to uri="http://www.mocky.io/v2/5e5028643000009000226e4e?bridgeEndpoint=true" />
+    </route>
+
+    <route id="process03">
+        <from uri="direct:triage"/>
+        <setHeader name="CamelHttpMethod">
+            <constant>GET</constant>
+        </setHeader>
+        <to uri="http://www.mocky.io/v2/5e50287e3000009000226e4f?bridgeEndpoint=true" />
+    </route>
+
+</routes>

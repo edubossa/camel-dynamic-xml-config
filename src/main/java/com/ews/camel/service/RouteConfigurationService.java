@@ -5,6 +5,7 @@ import com.ews.camel.repository.RouteConfigurationRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
@@ -15,7 +16,8 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-public class RouteConfigurationService {
+@Profile("!dev")
+public class RouteConfigurationService implements RouteConfiguration {
 
     @Autowired
     private RouteConfigurationRepository repository;
@@ -23,6 +25,7 @@ public class RouteConfigurationService {
     @Value("${spring.application.name}")
     private String applicationName;
 
+    @Override
     public InputStream routes() {
         final List<Route> routes = this.repository.findAllByApplicationName(this.applicationName);
 
@@ -37,5 +40,4 @@ public class RouteConfigurationService {
 
         return new ByteArrayInputStream(sb.toString().getBytes(StandardCharsets.UTF_8));
     }
-
 }
