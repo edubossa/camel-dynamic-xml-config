@@ -5,7 +5,7 @@
         <to uri="direct:steps"/>
     </route>
 
-    <route id="step">
+    <route id="steps">
         <from uri="direct:steps" />
         <multicast stopOnException="true"
                    stopOnAggregateException="true"
