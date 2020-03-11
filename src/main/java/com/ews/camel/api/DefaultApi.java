@@ -59,7 +59,7 @@ public class DefaultApi extends RouteBuilder {
                 .type(JsonNode.class)
                 .route().routeId("post-quotation")
                     //.log("User received: ${body}").id("received-user") //This step gets an id, so we can refer it in test
-                .to("direct:httpMultcastAsync")
+                .to("direct:steps")
                 .marshal().json(JsonLibrary.Jackson)
 
                     //https://stackoverflow.com/questions/41008023/apache-camel-unable-to-get-the-exception-body
