@@ -1,48 +1,45 @@
 package com.ews.camel.strategy;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import com.ews.camel.model.Step;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.camel.AggregationStrategy;
 import org.apache.camel.Exchange;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 @Component
 public class HttpMultiCastAggregationStrategy implements AggregationStrategy {
 
-    ObjectMapper mapper = new ObjectMapper();
-
     @lombok.SneakyThrows
-    public Exchange aggregate(Exchange e1, Exchange e2) {
-        if (e1 == null) {
-            return e2;
+    public Exchange aggregate(Exchange oldExchange, Exchange newExchange) {
+        final Date startDate = new Date(newExchange.getCreated());
+        String newBody = newExchange.getIn().getBody(String.class);
+        List<Step> list = null;
+        if (oldExchange == null) {
+            list = new ArrayList<>();
+            Step step = Step.builder()
+                    .name(newExchange.getIn().getHeader("stepName", String.class))
+                    .response(new ObjectMapper().readTree(newBody))
+                    .startDate(startDate)
+                    .endDate(new Date())
+                    .build();
+            list.add(step);
+            newExchange.getIn().setBody(list, ArrayList.class);
+            return newExchange;
         } else {
-            String body1 = e1.getIn().getBody(String.class);
-            String body2 = e2.getIn().getBody(String.class);
-
-            JsonNode node1 = mapper.readTree(body1);
-            JsonNode node2 = mapper.readTree(body2);
-
-            /*String service1 = e1.getIn().getHeader("serviceName", String.class);
-            System.out.println(service1);
-            String service2 = e2.getIn().getHeader("serviceName", String.class);
-            System.out.println(service2);
-
-            ObjectNode merge = mapper.createObjectNode();
-            merge.putPOJO(service1, node1);
-            merge.putPOJO(service2, node2);
-            System.out.println(merge.toString());*/
-
-            ObjectNode merge = mapper.createObjectNode();
-            merge.putPOJO("request01", node1);
-            merge.putPOJO("request02", node2);
-            System.out.println(merge.toString());
-
-            e1.getIn().setBody(merge.toString(), JsonNode.class);
-            return e1;
+            list = oldExchange.getIn().getBody(ArrayList.class);
+            Step step = Step.builder()
+                    .name(newExchange.getIn().getHeader("stepName", String.class))
+                    .response(new ObjectMapper().readTree(newBody))
+                    .startDate(startDate)
+                    .endDate(new Date())
+                    .build();
+            list.add(step);
+            return oldExchange;
         }
-
     }
-
 
 }

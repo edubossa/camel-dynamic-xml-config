@@ -4,16 +4,17 @@ import com.ews.camel.model.ApiErrorResponse;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.camel.ExchangeException;
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.model.dataformat.JsonLibrary;
 import org.springframework.stereotype.Component;
 
 // https://github.com/bszeti/camel-springboot/blob/master/camel-rest-complex/src/main/java/my/company/route/RestEndpoints.java
 // https://github.com/Talend/apache-camel/tree/master/examples/camel-example-spring-boot-rest-swagger
 //https://github.com/Talend/apache-camel/blob/master/examples/camel-example-servlet-rest-blueprint/src/main/resources/OSGI-INF/blueprint/camel.xml
 
-@Component("defaultApi")
+//@Component("defaultApi")
 public class DefaultApi extends RouteBuilder {
 
-    @Override
+    //@Override
     public void configure() throws Exception {
 
         /************************
@@ -58,7 +59,8 @@ public class DefaultApi extends RouteBuilder {
                 .type(JsonNode.class)
                 .route().routeId("post-quotation")
                     //.log("User received: ${body}").id("received-user") //This step gets an id, so we can refer it in test
-                    .to("direct:httpMultcastAsync")
+                .to("direct:httpMultcastAsync")
+                .marshal().json(JsonLibrary.Jackson)
 
                     //https://stackoverflow.com/questions/41008023/apache-camel-unable-to-get-the-exception-body
                     /*.setHeader(Exchange.HTTP_METHOD, constant("GET"))

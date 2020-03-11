@@ -1,5 +1,10 @@
 <routes xmlns="http://camel.apache.org/schema/spring">
 
+    <route rest="true">
+        <from uri="rest://post:/connector:/quotation?consumes=application%2Fjson&amp;inType=com.fasterxml.jackson.databind.JsonNode&amp;produces=application%2Fjson&amp;routeId=post-quotation"/>
+        <to uri="direct:httpMultcastAsync"/>
+    </route>
+
     <route id="callHttp">
         <from uri="direct:httpMultcastAsync" />
         <multicast stopOnException="true"
@@ -11,19 +16,11 @@
             <to uri="direct:quotation"/>
             <to uri="direct:triage"/>
         </multicast>
-        <setHeader name="CamelJsltString">
-            <constant>
-                {
-                "id" : .request01.request01.enrichedId,
-                "process" : .request01.request01.enrichedProcess
-                }
-            </constant>
-        </setHeader>
-        <to uri="jslt:callHttp" />
+        <process ref="stepsProcessor" />
     </route>
 
     <route id="process01">
-        <from uri="direct:elegibility"/>
+        <from uri="direct:elegibility" />
         <setHeader name="CamelHttpMethod">
             <constant>GET</constant>
         </setHeader>
@@ -45,15 +42,15 @@
                 <to uri="http://www.mocky.io/v2/5e5027ed3000005100226e49?bridgeEndpoint=true"/>
             </otherwise>
         </choice>
-
         <setHeader name="CamelJsltString">
             <constant>
                 {
-                "enrichedId" : .id,
-                "enrichedProcess" : .process
+                    "enrichedId" : .id,
+                    "enrichedProcess" : .process
                 }
             </constant>
         </setHeader>
+        <setHeader name="stepName"><constant>process01</constant></setHeader>
         <to uri="jslt:process01" />
     </route>
 
@@ -62,6 +59,7 @@
         <setHeader name="CamelHttpMethod">
             <constant>GET</constant>
         </setHeader>
+        <setHeader name="stepName"><constant>process02</constant></setHeader>
         <to uri="http://www.mocky.io/v2/5e5028643000009000226e4e?bridgeEndpoint=true" />
     </route>
 
@@ -70,6 +68,7 @@
         <setHeader name="CamelHttpMethod">
             <constant>GET</constant>
         </setHeader>
+        <setHeader name="stepName"><constant>process03</constant></setHeader>
         <to uri="http://www.mocky.io/v2/5e50287e3000009000226e4f?bridgeEndpoint=true" />
     </route>
 

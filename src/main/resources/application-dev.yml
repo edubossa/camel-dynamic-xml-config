@@ -32,7 +32,6 @@ spring:
   jmx:
     enabled: true
 
-
 camel:
   springboot:
     name: HdiRoute
