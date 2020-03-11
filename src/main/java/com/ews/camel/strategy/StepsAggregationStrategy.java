@@ -11,7 +11,7 @@ import java.util.Date;
 import java.util.List;
 
 @Component
-public class HttpMultiCastAggregationStrategy implements AggregationStrategy {
+public class StepsAggregationStrategy implements AggregationStrategy {
 
     @lombok.SneakyThrows
     public Exchange aggregate(Exchange oldExchange, Exchange newExchange) {

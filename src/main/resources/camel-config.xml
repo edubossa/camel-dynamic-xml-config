@@ -1,16 +1,16 @@
 <routes xmlns="http://camel.apache.org/schema/spring">
 
-    <route rest="true">
+    <route id="api" rest="true">
         <from uri="rest://post:/connector:/quotation?consumes=application%2Fjson&amp;inType=com.fasterxml.jackson.databind.JsonNode&amp;produces=application%2Fjson&amp;routeId=post-quotation"/>
-        <to uri="direct:httpMultcastAsync"/>
+        <to uri="direct:steps"/>
     </route>
 
-    <route id="callHttp">
-        <from uri="direct:httpMultcastAsync" />
+    <route id="step">
+        <from uri="direct:steps" />
         <multicast stopOnException="true"
                    stopOnAggregateException="true"
                    parallelProcessing="false"
-                   strategyRef="httpMultiCastAggregationStrategy"
+                   strategyRef="stepsAggregationStrategy"
                    strategyMethodName="aggregate">
             <to uri="direct:elegibility"/>
             <to uri="direct:quotation"/>
