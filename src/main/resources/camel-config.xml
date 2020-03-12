@@ -24,7 +24,7 @@
         <setHeader name="CamelHttpMethod">
             <constant>GET</constant>
         </setHeader>
-        <to uri="http://www.mocky.io/v2/5e62bd803600007100e8dc20?bridgeEndpoint=true&amp;throwExceptionOnFailure=false" />
+        <to uri="http://www.mocky.io/v2/5e6a78942d000093005fa3d7?bridgeEndpoint=true&amp;throwExceptionOnFailure=false" />
         <choice>
             <when>
                 <!-- quando o codigo http for menor que 300 -->
